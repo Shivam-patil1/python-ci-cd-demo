@@ -1,0 +1,32 @@
+name: Python Tests with Coverage
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run unit tests with coverage
+        run: |
+          coverage run -m unittest discover
+          coverage report -m
+
+      - name: Generate HTML report
+        run: coverage html
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-html
+          path: htmlcov
